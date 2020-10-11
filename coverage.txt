@@ -1,0 +1,11 @@
+mode: atomic
+github.com/mchirico/knights-tour/main.go:13.45,14.28 1 11
+github.com/mchirico/knights-tour/main.go:18.2,29.26 2 9
+github.com/mchirico/knights-tour/main.go:14.28,16.3 1 2
+github.com/mchirico/knights-tour/main.go:38.18,42.2 3 2
+github.com/mchirico/knights-tour/main.go:44.34,46.16 2 1
+github.com/mchirico/knights-tour/main.go:49.2,51.16 3 1
+github.com/mchirico/knights-tour/main.go:46.16,48.3 1 0
+github.com/mchirico/knights-tour/main.go:55.28,56.25 1 1
+github.com/mchirico/knights-tour/main.go:56.25,58.3 1 7
+github.com/mchirico/knights-tour/main.go:62.14,64.2 0 0

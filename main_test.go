@@ -1,6 +1,8 @@
 package main
 
 import (
+	"fmt"
+	"reflect"
 	"testing"
 )
 
@@ -30,13 +32,66 @@ func Test(t *testing.T) {
 }
 
 func Test_InitializeDB(t *testing.T) {
-	db := NewDB()
-	db.Board[1][1] = 1
+	bs := NewBS()
+	bs.Board[1][1] = 1
 }
 
+func Test_AddMove(t *testing.T) {
+	bs := NewBS()
+	err := bs.AddMove(0)
+	if err != nil {
+		t.Fatalf("%s", err)
+	}
+	bs.AddMove(0)
+	bs.AddMove(1)
+	bs.PrintBoard()
+	if !reflect.DeepEqual(bs.History, []int{0, 0, 0, 1}) {
+		t.Fatalf("Should have been equal")
+	}
 
-func TestDB_AddMove(t *testing.T) {
-	db := NewDB()
-	db.AddMove(0)
-	db.PrintBoard()
+}
+
+func TestBoardData_Push(t *testing.T) {
+	bd := NewBoardData()
+	bs := NewBS()
+
+	bs.AddMove(0)
+	bd.Push(bs)
+	bs.AddMove(0)
+	bd.Push(bs)
+
+	bd.BD[1].PrintBoard()
+}
+
+func TestOffBoard(t *testing.T) {
+	bs := NewBS()
+
+	bs.AddMove(0)
+	bs.AddMove(0)
+	bs.AddMove(0)
+	err := bs.AddMove(0)
+	if err == nil {
+		t.Fatalf("We're not getting an error")
+	}
+	if err.Error() != "off board" {
+		t.Fatalf("Should be off board")
+	}
+
+	bs.PrintBoard()
+}
+
+func TestOccupiedSquare(t *testing.T) {
+	bs := NewBS()
+	bs.AddMove(0)
+	bs.AddMove(1)
+	err := bs.AddMove(2)
+	fmt.Println(err)
+	if err == nil {
+		t.Fatalf("We're not getting an error")
+	}
+	if err.Error() != "occupied square" {
+		t.Fatalf("Should be occupied square")
+	}
+
+	bs.PrintBoard()
 }

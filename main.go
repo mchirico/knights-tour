@@ -16,43 +16,79 @@ func KnightOptions(index int) (Move, error) {
 	}
 
 	moves := []Move{
-		Move{1, 2},
-		Move{1, -2},
-		Move{-1, 2},
-		Move{-1, -2},
-		Move{2, 1},
-		Move{2, -1},
-		Move{-2, 1},
-		Move{-2, -1},
+		{1, 2},
+		{1, -2},
+		{-1, 2},
+		{-1, -2},
+		{2, 1},
+		{2, -1},
+		{-2, 1},
+		{-2, -1},
 	}
 
 	return moves[index], nil
 }
 
-type DB struct {
-	Board [8][8]int
-	Last  Move
-	Count int
+type BoardState struct {
+	Board   [8][8]int
+	Last    Move
+	Count   int
+	History []int
 }
 
-func NewDB() *DB {
-	db := &DB{}
-	db.Board = [8][8]int{}
-	return &DB{}
+type BoardData struct {
+	BD []BoardState
 }
 
-func (db *DB) AddMove(index int) {
+func NewBoardData() *BoardData {
+	return &BoardData{}
+}
+
+func (bd *BoardData) Push(bs *BoardState) {
+	tbs := NewBS()
+	tbs.Board = bs.Board
+	tbs.History = bs.History
+	tbs.Count = bs.Count
+	tbs.Last = bs.Last
+
+	bd.BD = append(bd.BD, *tbs)
+}
+
+func NewBS() *BoardState {
+	bs := &BoardState{}
+	bs.Board = [8][8]int{}
+	bs.Last = Move{0, 0}
+	bs.Count = 1
+	bs.Board[0][0] = bs.Count
+	bs.History = append(bs.History, 0)
+	return bs
+}
+
+func (db *BoardState) AddMove(index int) error {
 	move, err := KnightOptions(index)
 	if err != nil {
-		return
+		return err
 	}
+
+	a := move.a + db.Last.a
+	b := move.b + db.Last.b
+	if a < 0 || a > 7 || b < 0 || b > 7 {
+		return errors.New("off board")
+	}
+
+	if db.Board[a][b] != 0 {
+		return errors.New("occupied square")
+	}
+
 	db.Count += 1
-	db.Board[move.a][move.b] = db.Count
-	db.Last = move
+	db.Board[a][b] = db.Count
+	db.Last = Move{a, b}
+	db.History = append(db.History, index)
+	return nil
 
 }
 
-func (db *DB) PrintBoard() {
+func (db *BoardState) PrintBoard() {
 	for i := 0; i < 7; i++ {
 		fmt.Println(db.Board[i])
 	}

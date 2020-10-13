@@ -95,3 +95,17 @@ func TestOccupiedSquare(t *testing.T) {
 
 	bs.PrintBoard()
 }
+
+func TestBadMove(t *testing.T) {
+	bs := NewBS()
+	err := bs.AddMove(20)
+	fmt.Println(err)
+	if err == nil {
+		t.Fatalf("We're not getting an error")
+	}
+	if err.Error() != "index out of bounds" {
+		t.Fatalf("Should be index out of bounds")
+	}
+
+	bs.PrintBoard()
+}
